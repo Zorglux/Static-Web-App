@@ -1,14 +1,17 @@
 param location string = 'eastus2'
-param appName string = 'my-web-app'
-// -------------------------------------- // 
-@description('Create my static web app')
-resource StaticWebApp 'Microsoft.Web/staticSites@2023-12-01' = {
+param appName string = 'my-static-app'
+
+resource staticSite 'Microsoft.Web/staticSites@2023-12-01' = {
   name: appName
   location: location
   sku: {
     name: 'Free'
     tier: 'Free'
   }
+  properties: {
+    provider: 'GitHub'
+  }
 }
-// ===================================================== // 
-output staticWebAppDeploymentToken string = StaticWebApp.listSecrets().properties.apiKey
+
+output staticWebAppDefaultHostName string = staticSite.properties.defaultHostname
+output deploymentToken string = staticSite.listSecrets().properties.apiKey
