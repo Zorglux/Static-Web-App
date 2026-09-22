@@ -1,4 +1,4 @@
-param location string = 'westeurope'
+param location string = 'eastus2'
 param appName string = 'my-web-app'
 // -------------------------------------- // 
 @description('Create my static web app')
