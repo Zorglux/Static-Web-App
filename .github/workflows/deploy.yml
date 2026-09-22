@@ -27,7 +27,7 @@ jobs:
         uses: azure/arm-deploy@v2
         with:
           scope: resourcegroup
-          resourceGroupName: 'Web-App-RG'
+          resourceGroupName: 'Web-App'
           template: './infra/main.bicep'
 
       - name: Deploiement de la page HTML
