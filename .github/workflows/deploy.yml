@@ -30,6 +30,7 @@ jobs:
           scope: resourcegroup
           resourceGroupName: 'Web-App'
           template: './infrastructure/main.bicep'
+          failOnStdErr: false
 
       - name: Deploiement de la page HTML
         uses: Azure/static-web-apps-deploy@v1
