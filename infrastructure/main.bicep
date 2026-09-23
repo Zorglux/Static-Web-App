@@ -1,6 +1,7 @@
 param location string = 'eastus2'
 param appName string = 'my-static-app'
-// ============================== // 
+
+// 1. Static Web App
 resource staticSite 'Microsoft.Web/staticSites@2023-12-01' = {
   name: appName
   location: location
@@ -14,41 +15,45 @@ resource staticSite 'Microsoft.Web/staticSites@2023-12-01' = {
 }
 
 output staticWebAppDefaultHostName string = staticSite.properties.defaultHostname
-// ================ // 
+
+// 2. Cosmos DB Account
 resource CosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2022-05-15' = {
   name: 'database-account-static-app'
   location: location
   kind: 'GlobalDocumentDB'
   properties: {
     databaseAccountOfferType: 'Standard'
-    capacity:{ totalThroughputLimit: 1000 }
+    capacity: {
+      totalThroughputLimit: 1000
+    }
     capabilities: [
       {
         name: 'EnableServerless'
       }
     ]
-    locations:[
-      { locationName: location
-      failoverPriority: 0
+    locations: [
+      {
+        locationName: location
+        failoverPriority: 0
       }
     ]
   }
 }
 
-
+// 3. Database
 resource Database 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases@2022-05-15' = {
   parent: CosmosAccount
   name: 'database-static-app'
   properties: {
-      resource: {
+    resource: {
       id: 'database-static-app'
     }
   }
 }
 
-
+// 4. Container
 resource Container 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers@2022-05-15' = {
- parent: Database
+  parent: Database
   name: 'Counter'
   properties: {
     resource: {
@@ -62,9 +67,8 @@ resource Container 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/container
     }
   }
 }
-// =======================================
 
-// On ajoute la configuration de l'application (Application Settings)
+// 5. Injection des clés Cosmos DB dans l'API
 resource staticSiteAppsettings 'Microsoft.Web/staticSites/config@2023-12-01' = {
   parent: staticSite
   name: 'appsettings'
