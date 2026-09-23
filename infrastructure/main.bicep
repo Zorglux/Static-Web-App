@@ -62,3 +62,14 @@ resource Container 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/container
     }
   }
 }
+// =======================================
+
+// On ajoute la configuration de l'application (Application Settings)
+resource staticSiteAppsettings 'Microsoft.Web/staticSites/config@2023-12-01' = {
+  parent: staticSite
+  name: 'appsettings'
+  properties: {
+    COSMOS_DB_ENDPOINT: CosmosAccount.properties.documentEndpoint
+    COSMOS_DB_KEY: CosmosAccount.listKeys().primaryMasterKey
+  }
+}
