@@ -1,1 +1,29 @@
-<p>Test</p>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ptit Zorglux</title>
+</head>
+<body>
+    <h1>ZorgluxLand</h1>
+    <p>Site hébergé sur Azure Static Web Apps avec backend Serverless.</p>
+
+    <!-- Zone d'affichage du compteur -->
+    <p>Nombre de visites : <strong id="visitor-count">Chargement...</strong></p>
+
+    <script>
+        // Le navigateur appelle l'API dès que la page s'ouvre
+        fetch('/api/GetVisitorCount')
+            .then(response => response.json())
+            .then(data => {
+                // Met à jour la valeur affichée à l'écran
+                document.getElementById('visitor-count').innerText = data.count;
+            })
+            .catch(error => {
+                console.error('Erreur API :', error);
+                document.getElementById('visitor-count').innerText = 'Indisponible';
+            });
+    </script>
+</body>
+</html>
